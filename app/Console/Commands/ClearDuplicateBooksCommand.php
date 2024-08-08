@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Book;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -15,19 +16,25 @@ class ClearDuplicateBooksCommand extends Command
 
     public function handle()
     {
-        $duplicateIDs = DB::table('books')
-            ->select('id')
-            ->whereIn('isbn_number', function ($query) {
-                $query->select('isbn_number')
-                    ->from('books')
+
+        $duplicateIds = Book::query()
+            ->whereIn('isbn_number',
+                Book::query()
+                    ->select('isbn_number')
                     ->groupBy('isbn_number')
-                    ->havingRaw('COUNT(*) > 1');
-            })
-            ->whereRaw('id NOT IN (SELECT MIN(id) FROM books GROUP BY isbn_number)')
+                    ->havingRaw('COUNT(*) > 1')
+            )
+            ->whereNotIn('id',
+                Book::query()
+                    ->selectRaw('MIN(id)')
+                    ->groupBy('isbn_number')
+            )
+           // ->whereRaw('id NOT IN (SELECT MIN(id) FROM books GROUP BY isbn_number)')
             ->pluck('id');
 
-        // Delete duplicate entries
-        DB::table('books')->whereIn('id', $duplicateIDs)->delete();
+            Book::query()
+                ->whereIn('id', $duplicateIds)
+                ->delete();
 
         $this->info('Duplicate books have been cleared.');
 

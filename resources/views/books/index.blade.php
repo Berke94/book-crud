@@ -72,7 +72,7 @@
                                 <button type="submit" class="btn btn-danger btn-sm">Sil</button>
                             </form>
                         </div>
-                        <p><strong>Yazar:</strong> {{ $book->author }}</p>
+                        <p><strong>Yazar:</strong> {{ $book->author->name ?? 'Yazar bulunamadı' }}</p>
                         <p><strong>ISBN:</strong> {{ $book->isbn_number }}</p>
                         <p><strong>Açıklama:</strong> {{ $book->description }}</p>
                         <p><strong>Sayfa Sayısı:</strong> {{ $book->number_of_pages }}</p>
@@ -82,6 +82,7 @@
         @endforeach
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

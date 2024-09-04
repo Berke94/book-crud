@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthorController;
 
 
 // Anasayfa (kitap listeleme)
@@ -19,7 +20,8 @@ Route::put('/books/{book}', [BookController::class, 'update'])->name('books.upda
 // Kitap silme
 Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
 
-
+// Otomatik tamamlama için route
+Route::get('/authors/search', [AuthorController::class, 'search'])->name('authors.search');
 
 
 Route::get('/', function () {
@@ -43,4 +45,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
     // Add other book-related routes here
+
 });

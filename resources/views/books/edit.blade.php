@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kitap Düzenle</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <script>
+        $(document).ready(function() {
+            $('#author').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('authors.search') }}",
+                        dataType: "json",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        },
+                        error: function() {
+                            response([]);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $('#author_id').val(ui.item.id); // Seçilen yazarın ID'sini form alanına ekleyin
+                    $('#author').val(ui.item.label); // Seçilen yazarın adını input alanına ekleyin
+                    return false; // Bu, seçilen öğenin inputa yerleştirilmesini önler
+                }
+            });
+        });
+    </script>
     <script>
         function formatISBN(input) {
             let value = input.value.replace(/\D/g, ''); // Sadece rakamları al
@@ -55,6 +82,7 @@
         </div>
     </div>
 </nav>
+
 <div class="container mt-4">
     <h1 class="mb-4">Kitap Düzenle</h1>
 
@@ -69,7 +97,7 @@
         </div>
     @endif
 
-    <form action="{{ route('books.update', $book->id) }}" method="POST">
+    <form id="bookForm" action="{{ route('books.update', $book->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -78,7 +106,8 @@
         </div>
         <div class="mb-3">
             <label for="author" class="form-label">Yazar</label>
-            <input type="text" class="form-control" id="author" name="author" required value="{{ old('author', $book->author) }}">
+            <input type="text" class="form-control" id="author" name="author" required value="{{ old('author', $book->author->name ?? '') }}">
+            <input type="hidden" id="author_id" name="author_id" value="{{ old('author_id', $book->author_id) }}">
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Açıklama</label>
@@ -98,6 +127,9 @@
         <button type="submit" class="btn btn-primary">Güncelle</button>
     </form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

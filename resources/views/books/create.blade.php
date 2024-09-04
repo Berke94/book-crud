@@ -5,22 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kitap Ekle</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script>
-        function formatISBN(input) {
-            let value = input.value.replace(/\D/g, ''); // Sadece rakamları al
-            let formattedValue = '';
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 
-            // Her 3 rakamdan sonra tire ekle
-            for (let i = 0; i < value.length && i < 13; i++) {
-                if (i > 0 && i % 3 === 0 && i < 13) {
-                    formattedValue += '-';
-                }
-                formattedValue += value[i];
-            }
-
-            input.value = formattedValue;
-        }
-    </script>
+    <!-- jQuery ve jQuery UI Kitaplıkları -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -30,8 +19,7 @@
             <ul class="navbar-nav">
                 @auth
                     <li class="nav-item dropdown">
-                        <a
-                            class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -56,6 +44,7 @@
         </div>
     </div>
 </nav>
+
 <div class="container mt-4">
     <h1 class="mb-4">Yeni Kitap Ekle</h1>
 
@@ -70,15 +59,15 @@
         </div>
     @endif
 
-    <form action="{{ route('books.store') }}" method="POST">
+    <form id="bookForm" action="{{ route('books.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="book_name" class="form-label">Kitap Adı</label>
             <input type="text" class="form-control" id="book_name" name="book_name" required value="{{ old('book_name') }}">
         </div>
         <div class="mb-3">
-            <label for="author" class="form-label">Yazar</label>
-            <input type="text" class="form-control" id="author" name="author" required value="{{ old('author') }}">
+            <label for="author_name" class="form-label">Yazar</label>
+            <input type="text" class="form-control" id="author_name" name="author_name" required value="{{ old('author_name') }}">
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Açıklama</label>
@@ -98,6 +87,56 @@
         <button type="submit" class="btn btn-primary">Ekle</button>
     </form>
 </div>
+
+<!-- Autocomplete ve ISBN Formatlama JavaScript Kodu -->
+<script>
+    $(document).ready(function() {
+        $('#author').autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "{{ route('authors.search') }}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response($.map(data, function(item) {
+                            return {
+                                label: item.name,
+                                value: item.name,
+                                id: item.id
+                            };
+                        }));
+                    },
+                    error: function() {
+                        response([]);
+                    }
+                });
+            },
+            select: function(event, ui) {
+                $('#author_id').val(ui.item.id); // Seçilen yazarın ID'sini form alanına ekleyin
+                $('#author').val(ui.item.label); // Sadece yazar adını input alanına ekleyin
+                return false; // Bu, seçilen öğenin inputa yerleştirilmesini önler
+            }
+        });
+    });
+
+    function formatISBN(input) {
+        let value = input.value.replace(/\D/g, ''); // Sadece rakamları al
+        let formattedValue = '';
+
+        // Her 3 rakamdan sonra tire ekle
+        for (let i = 0; i < value.length && i < 13; i++) {
+            if (i > 0 && i % 3 === 0 && i < 13) {
+                formattedValue += '-';
+            }
+            formattedValue += value[i];
+        }
+
+        input.value = formattedValue;
+    }
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

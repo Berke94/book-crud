@@ -23,6 +23,12 @@ Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.
 // Otomatik tamamlama için route
 Route::get('/authors/search', [AuthorController::class, 'search'])->name('authors.search');
 
+// Yazar onaylama sayfasına erişim
+Route::get('authors/approval', [AuthorController::class, 'approvalPage'])->name('authors.approval');
+
+// Yazar onaylama işlemi
+Route::post('authors/{id}/approve', [AuthorController::class, 'approve'])->name('authors.approve');
+
 
 Route::get('/', function () {
     return view('welcome');

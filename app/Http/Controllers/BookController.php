@@ -60,19 +60,24 @@ class BookController extends Controller
         // Kitap verisini ID'ye göre bul
         $book = Book::findOrFail($id);
 
-        // Verileri doğrula ve güncelle
+        // Verileri doğrula
         $request->validate([
             'book_name' => 'required|string|max:255',
-            'author_id' => 'required|exists:authors,id',
+            'author_name' => 'required|string|max:255', // Yazar adı doğrulaması
             'description' => 'required|string',
             'isbn_number' => 'required|string|max:255',
             'number_of_pages' => 'required|integer|min:1',
         ]);
 
+        // Yazarın veritabanında olup olmadığını kontrol et veya yeni bir yazar oluştur
+        $author = Author::firstOrCreate(
+            ['name' => $request->author_name] // Yazar ismi üzerinden kontrol
+        );
+
         // Kitap bilgilerini güncelle
         $book->update([
             'book_name' => $request->input('book_name'),
-            'author_id' => $request->input('author_id'),
+            'author_id' => $author->id, // Yazarın ID'si ile güncelleniyor
             'description' => $request->input('description'),
             'isbn_number' => $request->input('isbn_number'),
             'number_of_pages' => $request->input('number_of_pages'),

@@ -1,57 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kitap Listesi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .navbar-custom {
-            padding-left: 0; /* Sol boşluğu kaldırır */
-        }
-        .navbar-brand {
-            margin-left: 300px; /* Ana sayfa bağlantısını hizalamak için margin eklenir */
-        }
-    </style>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
-    <div class="container-fluid">
-        <!-- Sol tarafa hizalanmış ANA SAYFA -->
-        <a class="navbar-brand" href="/">
-            ANA SAYFA
-        </a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto"> <!-- Sağ tarafa hizalanmış diğer menüler -->
-                @auth
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ Auth::user()->name }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ url('/profile') }}">Profilim</a></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button class="dropdown-item" type="submit">Çıkış Yap</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Giriş Yap</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">Kayıt Ol</a>
-                    </li>
-                @endauth
-            </ul>
-        </div>
-    </div>
-</nav>
+<!-- resources/views/books/index.blade.php -->
 
-<div class="container mt-4">
+@extends('layouts.main')
+
+@section('title', 'Kitap Listesi')
+
+@section('content')
     <h1 class="mb-4">Kitap Listesi</h1>
     <a href="{{ route('books.create') }}" class="btn btn-primary mb-3">Yeni Kitap Ekle</a>
     <div class="accordion" id="bookAccordion">
@@ -81,8 +34,4 @@
             </div>
         @endforeach
     </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

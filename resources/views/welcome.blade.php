@@ -56,7 +56,6 @@
     <div class="container">
         <a class="navbar-brand" href="#">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="navbar-logo">
-            <a href="{{ url('/books') }}" class="navbar-title">KİTAPLIK</a>
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto"> <!-- Added ms-auto for right alignment -->

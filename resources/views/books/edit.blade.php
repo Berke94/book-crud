@@ -48,6 +48,18 @@
                 <label for="number_of_pages" class="form-label">Sayfa Sayısı</label>
                 <input type="number" class="form-control" id="number_of_pages" name="number_of_pages" required value="{{ old('number_of_pages', $book->number_of_pages) }}">
             </div>
+            <div class="mb-3">
+                <label for="bookstores" class="form-label">Satışta Olduğu Kitapçılar</label>
+                @foreach($bookstores as $bookstore)
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="bookstores[]" value="{{ $bookstore->id }}" id="bookstore{{ $bookstore->id }}"
+                            {{ $book->bookstores->contains($bookstore->id) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="bookstore{{ $bookstore->id }}">
+                            {{ $bookstore->name }}
+                        </label>
+                    </div>
+                @endforeach
+            </div>
             <button type="submit" class="btn btn-primary">Güncelle</button>
         </form>
     </div>

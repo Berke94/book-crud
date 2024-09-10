@@ -5,19 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use App\Models\Bookstore;
 
 class BookController extends Controller
 {
     public function index()
     {
-        $books = Book::with('author')->get(); // Yazar bilgilerini de yükle
+        $books = Book::with('bookstores', 'author')->get();
         return view('books.index', compact('books'));
     }
 
     public function create()
     {
         $authors = Author::all(); // Yazarları listeleyin
-        return view('books.create', compact('authors'));
+        $bookstores = Bookstore::all();
+        return view('books.create', compact('authors', 'bookstores'));
     }
 
     public function store(Request $request)
@@ -29,6 +31,8 @@ class BookController extends Controller
             'description' => 'required|string',
             'isbn_number' => 'required|string|max:255',
             'number_of_pages' => 'required|integer',
+            'bookstores' => 'nullable|array',
+            'bookstores.*' => 'exists:bookstores,id'
         ]);
 
         // Yazarın veritabanında olup olmadığını kontrol et
@@ -44,7 +48,7 @@ class BookController extends Controller
             'isbn_number' => $request->isbn_number,
             'number_of_pages' => $request->number_of_pages,
         ]);
-
+        $book->bookstores()->sync($request->bookstores);
         return redirect()->route('books.index')->with('success', 'Kitap başarıyla eklendi.');
     }
 
@@ -52,22 +56,27 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
         $authors = Author::all(); // Yazarları listeleyin
-        return view('books.edit', compact('book', 'authors'));
+        $bookstores = Bookstore::all();
+        return view('books.edit', compact('book', 'authors', 'bookstores'));
+
+
     }
 
     public function update(Request $request, $id)
     {
-        // Kitap verisini ID'ye göre bul
-        $book = Book::findOrFail($id);
-
-        // Verileri doğrula
         $request->validate([
             'book_name' => 'required|string|max:255',
             'author_name' => 'required|string|max:255', // Yazar adı doğrulaması
             'description' => 'required|string',
             'isbn_number' => 'required|string|max:255',
             'number_of_pages' => 'required|integer|min:1',
+            'bookstores' => 'nullable|array',
+            'bookstores.*' => 'exists:bookstores,id'
         ]);
+
+        $book = Book::findOrFail($id);
+
+
 
         // Yazarın veritabanında olup olmadığını kontrol et veya yeni bir yazar oluştur
         $author = Author::firstOrCreate(
@@ -82,7 +91,7 @@ class BookController extends Controller
             'isbn_number' => $request->input('isbn_number'),
             'number_of_pages' => $request->input('number_of_pages'),
         ]);
-
+        $book->bookstores()->sync($request->bookstores);
         return redirect()->route('books.index')->with('success', 'Kitap başarıyla güncellendi.');
     }
 

@@ -54,7 +54,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/books">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="navbar-logo">
         </a>
         <div class="collapse navbar-collapse">

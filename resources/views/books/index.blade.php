@@ -29,6 +29,18 @@
                         <p><strong>ISBN:</strong> {{ $book->isbn_number }}</p>
                         <p><strong>Açıklama:</strong> {{ $book->description }}</p>
                         <p><strong>Sayfa Sayısı:</strong> {{ $book->number_of_pages }}</p>
+
+                        <!-- Kitapçılar bilgisi -->
+                        <p><strong>Satışta Olduğu Kitapçılar:</strong></p>
+                        @if($book->bookstores->isEmpty())
+                            <p>Bu kitap henüz hiçbir kitapçıda satışta değil.</p>
+                        @else
+                            <ul>
+                                @foreach ($book->bookstores as $bookstore)
+                                    <li>{{ $bookstore->name }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
                 </div>
             </div>

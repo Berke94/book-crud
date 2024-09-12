@@ -12,6 +12,16 @@
                         <i class="bi bi-plus-circle"></i> Yeni Kitap Ekle
                     </a>
                     <span class="text-muted">Toplam Kitap: {{ $books->count() }}</span>
+
+                    <!-- Sıralama Menüsü -->
+                    <form method="GET" action="{{ route('books.index') }}" class="d-inline">
+                        <select name="sort" class="form-select" onchange="this.form.submit()">
+                            <option value="book_name" {{ request('sort') == 'book_name' ? 'selected' : '' }}>Alfabetik Sıraya Göre</option>
+                            <option value="created_at" {{ request('sort') == 'created_at' ? 'selected' : '' }}>Eklenme Tarihine Göre</option>
+                            <option value="author_name" {{ request('sort') == 'author_name' ? 'selected' : '' }}>Yazar Adına Göre</option>
+
+                        </select>
+                    </form>
                 </div>
 
                 <div class="accordion" id="bookAccordion">

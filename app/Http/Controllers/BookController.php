@@ -9,10 +9,36 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with('bookstores', 'author')->get();
+        $sort = $request->input('sort', 'book_name');
+
+        // Kitapları onaylı yazarlara göre filtreleyip sıralama yapıyoruz
+        $booksQuery = Book::with('author', 'bookstores')
+            ->whereHas('author', function ($query) {
+                $query->where('approved', true);
+            });
+
+        // Kullanıcının seçimine göre sıralama işlemi
+        switch ($sort) {
+            case 'author_name':
+                $booksQuery->join('authors', 'books.author_id', '=', 'authors.id')
+                    ->orderBy('authors.name')
+                    ->select('books.*');
+                break;
+
+            case 'created_at':
+                $booksQuery->orderBy('created_at', 'desc');
+                break;
+
+            case 'book_name':
+            default:
+                $booksQuery->orderBy('book_name');
+                break;
+        }
+
+        $books = $booksQuery->get();
+
         return view('books.index', compact('books'));
     }
 
@@ -59,8 +85,6 @@ class BookController extends Controller
         $authors = Author::all(); // Yazarları listeleyin
         $bookstores = Bookstore::all();
         return view('books.edit', compact('book', 'authors', 'bookstores'));
-
-
     }
 
     public function update(Request $request, $id)
@@ -76,8 +100,6 @@ class BookController extends Controller
         ]);
 
         $book = Book::findOrFail($id);
-
-
 
         // Yazarın veritabanında olup olmadığını kontrol et veya yeni bir yazar oluştur
         $author = Author::firstOrCreate(

@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Author;
-use Illuminate\Http\Request;
 use App\Models\Bookstore;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
+
     public function index()
     {
         $books = Book::with('bookstores', 'author')->get();
@@ -41,7 +42,7 @@ class BookController extends Controller
         );
 
         // Kitap kaydı oluştur
-        Book::create([
+        $book = Book::create([
             'book_name' => $request->book_name,
             'author_id' => $author->id,
             'description' => $request->description,

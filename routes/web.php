@@ -24,10 +24,13 @@ Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.
 Route::get('/authors/search', [AuthorController::class, 'search'])->name('authors.search');
 
 // Yazar onaylama sayfasına erişim
-Route::get('authors/approval', [AuthorController::class, 'approvalPage'])->name('authors.approval');
+Route::middleware(['auth'])->group(function () {
+    Route::get('authors/approval', [AuthorController::class, 'approvalPage'])->name('authors.approval');
 
-// Yazar onaylama işlemi
-Route::post('authors/{id}/approve', [AuthorController::class, 'approve'])->name('authors.approve');
+    // Yazar onaylama işlemi
+    Route::post('authors/{id}/approve', [AuthorController::class, 'approve'])->name('authors.approve');
+    Route::delete('/authors/{id}', [AuthorController::class, 'destroy'])->name('authors.destroy');
+});
 
 
 Route::get('/', function () {
@@ -43,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';
 

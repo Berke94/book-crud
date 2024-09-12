@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
+
     public function store(Request $request)
     {
         $request->validate([
@@ -50,7 +51,13 @@ class AuthorController extends Controller
 
         return redirect()->route('authors.approval')->with('success', 'Yazar başarıyla onaylandı.');
     }
+    public function destroy($id)
+    {
+        $author = Author::findOrFail($id);
+        $author->delete();
 
+        return redirect()->route('authors.approval')->with('success', 'Yazar başarıyla silindi.');
+    }
 
 
 

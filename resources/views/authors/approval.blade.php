@@ -15,11 +15,18 @@
                     </div>
                 @endif
 
+                @if (session('danger'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('danger') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <div class="table-responsive shadow-sm">
                     <table class="table table-hover align-middle">
                         <thead class="bg-primary text-white">
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col"><i class="bi bi-pencil-square"></i></th>
                             <th scope="col">Yazar Adı</th>
                             <th scope="col">Onay Durumu</th>
                             <th scope="col" class="text-end">İşlemler</th>

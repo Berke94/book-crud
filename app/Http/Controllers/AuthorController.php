@@ -56,7 +56,7 @@ class AuthorController extends Controller
         $author = Author::findOrFail($id);
         $author->delete();
 
-        return redirect()->route('authors.approval')->with('success', 'Yazar başarıyla silindi.');
+        return redirect()->route('authors.approval')->with('danger', 'Yazar başarıyla silindi.');
     }
 
 

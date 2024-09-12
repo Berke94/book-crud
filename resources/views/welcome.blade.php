@@ -77,9 +77,9 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="{{ url('/profile') }}">Profilim</a></li>
                             <li>
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" class="d-inline">
                                     @csrf
-                                    <button class="dropdown-item btn btn-danger" type="submit">Çıkış Yap</button>
+                                    <button class="dropdown-item" type="submit">Çıkış Yap</button>
                                 </form>
                             </li>
                         </ul>

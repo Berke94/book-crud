@@ -15,13 +15,6 @@
                     </div>
                 @endif
 
-                @if (session('danger'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('danger') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
                 <div class="table-responsive shadow-sm">
                     <table class="table table-hover align-middle">
                         <thead class="bg-primary text-white">

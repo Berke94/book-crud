@@ -53,13 +53,13 @@ class BookController extends Controller
     {
         // Formdan gelen verileri doğrula
         $request->validate([
-            'book_name' => 'required|string|max:255',
-            'author_name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'isbn_number' => 'required|string|max:255',
-            'number_of_pages' => 'required|integer',
-            'bookstores' => 'nullable|array',
-            'bookstores.*' => 'exists:bookstores,id'
+            'book_name' => ['required', 'string', 'max:255'],
+            'author_name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'isbn_number' => ['required', 'string', 'max:255'],
+            'number_of_pages' => ['required', 'integer', 'min:1'],
+            'bookstores' => ['nullable', 'array'],
+            'bookstores.*' => ['integer', 'exists:bookstores,id']
         ]);
 
         // Yazarın veritabanında olup olmadığını kontrol et
@@ -90,13 +90,13 @@ class BookController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'book_name' => 'required|string|max:255',
-            'author_name' => 'required|string|max:255', // Yazar adı doğrulaması
-            'description' => 'required|string',
-            'isbn_number' => 'required|string|max:255',
-            'number_of_pages' => 'required|integer|min:1',
-            'bookstores' => 'nullable|array',
-            'bookstores.*' => 'exists:bookstores,id'
+            'book_name' => ['required', 'string', 'max:255'],
+            'author_name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'isbn_number' => ['required', 'string', 'max:255'],
+            'number_of_pages' => ['required', 'integer', 'min:1'],
+            'bookstores' => ['nullable', 'array'],
+            'bookstores.*' => ['integer', 'exists:bookstores,id']
         ]);
 
         $book = Book::findOrFail($id);

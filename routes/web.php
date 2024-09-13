@@ -28,8 +28,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('authors/approval', [AuthorController::class, 'approvalPage'])->name('authors.approval');
 
     // Yazar onaylama işlemi
-    Route::post('authors/{id}/approve', [AuthorController::class, 'approve'])->name('authors.approve');
-    Route::delete('/authors/{id}', [AuthorController::class, 'destroy'])->name('authors.destroy');
+    Route::post('authors/{author}/approve', [AuthorController::class, 'approve'])->name('authors.approve');
+    Route::delete('authors/{author}', [AuthorController::class, 'destroy'])->name('authors.destroy');
+
 });
 
 Route::get('/book-store', [BookController::class, 'index'])->name('book.store');

@@ -9,18 +9,6 @@ use Illuminate\Http\Request;
 class AuthorController extends Controller
 {
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:authors,name',
-        ]);
-
-        $author = Author::create([
-            'name' => $request->input('name'),
-        ]);
-
-        return response()->json($author); // JSON yanıt döndür
-    }
     public function search(Request $request)
     {
         $query = $request->get('term');
@@ -33,7 +21,7 @@ class AuthorController extends Controller
             ];
         });
 
-        return response()->json($results);
+        return $results;
     }
 
     // Onay sayfası
@@ -44,21 +32,18 @@ class AuthorController extends Controller
     }
 
     // Yazar onaylama işlemi
-    public function approve($id)
+    public function approve(Author $author)
     {
-        $author = Author::findOrFail($id);
         $author->update(['approved' => true]);
 
         return redirect()->route('authors.approval')->with('success', 'Yazar başarıyla onaylandı.');
     }
-    public function destroy($id)
+
+
+    public function destroy(Author $author)
     {
-        $author = Author::findOrFail($id);
         $author->delete();
 
-        return redirect()->route('authors.approval')->with('danger', 'Yazar başarıyla silindi.');
+        return redirect()->route('authors.approval')->with('success', 'Yazar başarıyla silindi.');
     }
-
-
-
 }
